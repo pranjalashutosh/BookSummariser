@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Summarizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .summary-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .summary-container h2 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+        .summary-container pre {
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Book Summarizer</h1>
+    </header>
+    <main>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <label for="file">Upload a PDF:</label><br><br>
+            <input type="file" name="file" id="file" accept=".pdf" required><br><br>
+            <button type="submit">Summarize</button>
+        </form>
+
+        {% if text %}
+        <div class="summary-container">
+            <h2>Summary</h2>
+            <pre>{{ summary }}</pre>
+        </div>
+        {% endif %}
+    </main>
+</body>
+</html>
