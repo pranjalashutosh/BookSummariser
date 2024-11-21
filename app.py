@@ -24,9 +24,32 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 # Helper function to summarize text
-def summarize_text(text, max_length=150, min_length=50):
+def summarize_text(text, max_length=300, min_length=50):
     summary = summarizer(text, max_length=max_length, min_length=min_length, do_sample=False)
     return summary[0]['summary_text']
+
+# Splitter Function
+def split_text(text, chunk_size=500):
+    sentences = text.split('.')
+    chunks = []
+    current_chunk = []
+    current_length = 0
+
+    for sentence in sentences:
+        token_length = len(sentence.split())
+        if current_length + token_length > chunk_size:
+            chunks.append(" ".join(current_chunk))
+            current_chunk = []
+            current_length = 0
+
+        current_chunk.append(sentence)
+        current_length += token_length
+
+    if current_chunk:  # Add the last chunk if any
+        chunks.append(" ".join(current_chunk))
+
+    return chunks
+
 
 # Route for uploading PDF and generating summary
 @app.route('/', methods=['GET', 'POST'])
@@ -43,9 +66,12 @@ def upload_file():
 
             # Summarize the extracted text
             # Limiting to the first 1000 characters for performance (can be adjusted)
-            summary = summarize_text(text[:1000])
+            summaries = [summarizer(chunk, max_length=150, min_length=50, do_sample=False)[0]['summary_text']
+             for chunk in split_text(text)]
+            
+            final_summary = " ".join(summaries)
 
-            return render_template('index.html', text=text, summary=summary)
+            return render_template('index.html', text=text, summary=final_summary)
 
     # Default case: Render upload form
     return render_template('index.html', text=None, summary=None)
